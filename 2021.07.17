@@ -1,0 +1,50 @@
+class Solution {
+public:
+    vector<int> twoSum(vector<int>& nums, int target) {
+        vector<int> result;
+        vector<int> temp(nums);
+        sort(temp.begin(),temp.end());
+        int flag=0;
+        for(int i=0;i<nums.size();i++){
+            if(binarySearch(temp,target-nums[i],nums[i])){
+                int findnum=target-nums[i];
+                int j;
+                for(j=0;j<nums.size();j++){
+                    if(i!=j&&nums[j]==findnum){
+                        result.push_back(i);
+                        result.push_back(j);
+                    }
+                }
+                break;
+            }
+        }
+        return result;
+    }
+    bool binarySearch(vector<int> temp,int key,int num){
+        int low=0,high=temp.size()-1;
+        int mid;
+        while(low<=high){
+            mid=(low+high)/2;
+            if(temp[mid]==key){
+                if(num==key){
+                    if(mid>=1&&temp[mid-1]==key||temp[mid+1]==key){
+                        return true;
+                    }
+                    else{
+                        return false;
+                    }
+                }
+                else{
+                    return true;
+                }
+            }
+            else if(temp[mid]>key){
+                high=mid-1;
+            }
+            else{
+                low=mid+1;
+            }
+        }
+        return false;
+    }
+};
