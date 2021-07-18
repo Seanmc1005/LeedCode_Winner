@@ -1,0 +1,23 @@
+/*
+    （1）本来想着用set，但是转眼一想，好家伙字符本来数目就有限制，直接散列表YYDS。
+    （2）然后就是，注意一下，一般需要计算那种某个出现了多少次的，只有总数能把控，那就是哈希表（散列表）做。
+    （3）双指针滑动窗口，YYDS！！！
+*/
+class Solution {
+public:
+    int lengthOfLongestSubstring(string s) {
+        int Max=0;
+        //采用滑动窗口（双指针）+哈希表
+        int character[256]={0};
+        int i=0,j=0;
+        while(i<s.length()&&j<s.length()){
+            character[s[j]]++;
+            while(character[s[j]]>1){
+                character[s[i++]]--;
+            }
+            j++;
+            Max=max(Max,j-i);
+        }
+        return Max;
+    }
+};
