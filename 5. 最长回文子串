@@ -1,0 +1,31 @@
+class Solution {
+public:
+    string longestPalindrome(string s) {
+        //首先分清楚子串和子序列，子串是连续的，子序列不是。
+        //将一个回文串看做是中间有n个重复的字符+两边是对称的字符的一个子串。
+        //进行遍历即可。
+        int record[2]={0};
+        for(int i=0;i<s.length();i++){
+            i=findStr(s,i,record);
+        }
+        return s.substr(record[0],record[1]-record[0]+1);
+    }
+    int findStr(string s,int i,int record[]){
+        int j=i; //找出重复的最右侧的index;
+        int n=s.length();
+        while(j<n-1&&s[j+1]==s[i]){
+            j++;
+        }
+        int ans=j;
+        while(i>0&&j<n-1&&(s[i-1]==s[j+1])){
+            i--;
+            j++;
+        }
+        if(j-i>record[1]-record[0]){
+            record[0]=i;
+            record[1]=j;
+        }
+        return ans; //下一个要查看的中间结点;
+    }
+};
+
