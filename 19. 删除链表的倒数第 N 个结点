@@ -1,0 +1,33 @@
+//借助头结点的好处，使得不管是删的是不是第一个都可以一并处理。
+//对于删除的可能是最后一个结点，在这里是得到的删除那个结点的前一个结点，这样利用了头结点就可以使得不管什么情况均OK！
+
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* removeNthFromEnd(ListNode* head, int n) {
+        ListNode *L=new ListNode();
+        L->next=head;
+        ListNode *fast=L;
+        ListNode *low=L;
+        int count=n;
+        while(fast!=nullptr&&count>0){
+            fast=fast->next;
+            count--;
+        }
+        while(fast->next!=nullptr){
+            fast=fast->next;
+            low=low->next;
+        }
+        low->next=low->next->next;
+        return L->next;
+    }
+};
