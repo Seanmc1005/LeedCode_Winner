@@ -1,0 +1,24 @@
+class Solution {
+public:
+    vector<string> generateParenthesis(int n) {
+        //回溯+剪枝（递归）
+        int left=0;  //左括号数目
+        int right=0; //右括号数目
+        vector<string> ans;
+        find(ans,"",left,right,n);
+        return ans;
+    }
+
+    void find(vector<string> &ans,string str,int left,int right,int n){
+        if(left>n||right>n||right>left){  //可以left>right,但是绝对不可以right>left;
+            return;  //剪枝行为！
+        }
+        if(left==n&&right==n){  //成功加入！
+            ans.push_back(str);
+            return ;
+        }
+        find(ans,str+'(',left+1,right,n);  //牛逼的点在这，按照每一个位置看，该位置是'('还是')',然后递归调用，每一个位置都会看。不会重复！
+        find(ans,str+')',left,right+1,n);
+        return ;
+    }
+};
