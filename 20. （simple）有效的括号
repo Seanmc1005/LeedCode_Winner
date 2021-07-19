@@ -1,0 +1,39 @@
+class Solution {
+public:
+    bool isValid(string s) {
+        //匹配问题，用栈
+        bool flag=true;
+        int i=0;
+        stack<char> match; 
+        while(i<s.length()){
+            if(i==0){
+                match.push(s[i]);
+            }
+            else{
+                if(s[i]=='('||s[i]=='['||s[i]=='{'){
+                    match.push(s[i]);
+                }else{
+                    if(match.empty()){
+                        flag=false;
+                        break;
+                    }
+                    else{
+                        char ch=match.top();
+                        if(ch=='('&&s[i]==')'||ch=='['&&s[i]==']'||ch=='{'&&s[i]=='}'){
+                           match.pop(); 
+                        }
+                        else{
+                            flag=false;
+                            break;
+                        }
+                    }
+                }
+            }
+            i++;
+        }
+        if(flag&&!match.empty()){
+            flag=false;
+        }
+        return flag;
+    }
+};
