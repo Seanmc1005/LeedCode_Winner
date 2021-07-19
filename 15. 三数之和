@@ -1,0 +1,43 @@
+//本题主要是双指针+排序法
+//双指针主要是定一个动两个额想法。
+//排序主要是找到和为-c的以及有效的去重。
+class Solution {
+public:
+    vector<vector<int>> threeSum(vector<int>& nums) {
+        //如果本题是两个数a+b=0,我们可以采用set存nums中所有不同的数据。然后给nums排序，遍历set中数据a，用二分法去排序后的nums中找-a，找到就是一对。
+        //本题肯定也用到二分搜索。
+        int ia,ib,ic;
+        int a,b,c;
+        vector<vector<int>> result;
+        sort(nums.begin(),nums.end());
+        //双指针是因为定1动2，为了避免重复，我们从后往前遍历，固定c值，从该位置往前找a+b=-c的值，就可以确保不会出现重复。
+        for(ic=nums.size()-1;ic>=2;ic--){
+            c=nums[ic];
+            if(ic<nums.size()-1&&nums[ic]==nums[ic+1]){  //c去重
+                continue;
+            }
+            for(ia=0,ib=ic-1;ia<ib;){
+                if(nums[ia]+nums[ib]<-c){
+                    ia++;
+                }
+                else if(nums[ia]+nums[ib]>-c){
+                    ib--;
+                }
+                else{
+                    vector<int> temp;
+                    temp.push_back(nums[ia]);
+                    temp.push_back(nums[ib]);
+                    temp.push_back(nums[ic]);
+                    result.push_back(temp);
+                    do{
+                        ia++;
+                    }while(ia<ib&&nums[ia-1]==nums[ia]);  //a去除重复
+                    do{
+                        ib--;
+                    }while(ia<ib&&nums[ib+1]==nums[ib]);  //b去除重复
+                }
+            }
+        }
+        return result;
+    }
+};
