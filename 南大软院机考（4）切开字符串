@@ -1,0 +1,61 @@
+#include<stdlib.h>
+#include<string>
+#include<iostream>
+#include<math.h>
+#include<cmath>
+#include<algorithm>
+#include<set>
+using namespace std;
+
+
+bool JudgeOddPalindrome(string str) {
+	if (str.length() % 2 == 0) {  //偶数为0
+		return 0;
+	}
+	int mid = str.length() / 2;
+	for (int i = mid - 1, j = mid + 1; i >= 0 && j < str.length(); i--, j++) {
+		if (str[i] != str[j]) {
+			return false;
+		}
+	}
+	return true;
+}
+
+//其实转换过来就是，可以从左往右算A的存在一个数组里，从右往左算B的存在一个数组里，算的时候都可以简化算，最后直接对应位置想乘即可算MAX值。
+
+int main() {
+
+	int N;
+	string str;
+	cin >> N;
+	cin >> str;
+	int Max = 0;
+	//cout << B.size() << endl;
+	set<string> A; 
+  
+	//A可以直接加，但是B不可以直接减，因为重复的都没有算，但是这里要注意，
+	//可能存在一种情况是：原本某个不符合的字符串会出现两次，但是只算了一次，我们i向右移动之后
+	//那个字符串被删了，但是其实按道理应该是存在的，所以求B的必须每次都求一次。
+  
+	for (int i = 0; i < str.length(); i++) {
+		set<string> B;
+		for (int a = 0; a <= i; a++) {
+			if (A.find(str.substr(a, i - a + 1)) == A.end() &&
+				JudgeOddPalindrome(str.substr(a, i - a + 1))) {
+				A.insert(str.substr(a, i-a+1));
+			}
+		}
+		for (int b = i + 1; b < str.length(); b++) {
+			for (int j = 1; j <= str.length() - b; j++) {
+				if (B.find(str.substr(b, j)) == B.end()&& 
+					!JudgeOddPalindrome(str.substr(b, j))) {
+					B.insert(str.substr(b, j));
+				}
+			}
+		}
+		cout << A.size() << "、" << B.size() << endl;
+		Max = Max < A.size()* B.size() ? A.size() * B.size() : Max;
+	}
+	cout << Max << endl;
+	return 0;
+}
