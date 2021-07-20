@@ -1,0 +1,63 @@
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+ 
+ //时间复杂度为：O(n*log2(k)),n为总的数据的数目,k为链表的数目，在这里采用的是分治法。
+ //整体的思路就是跟数据结构中的归并排序很像，只不过这里是链表不需要外加空间，但是因为用到了递归，所以内存消耗也很严重！
+ 
+class Solution {
+public:
+    ListNode* mergeKLists(vector<ListNode*>& lists) {
+        if(lists.size()==0) {
+            return nullptr;
+        }else{
+            return mergeBinaryLists(lists,0,lists.size()-1);
+        }  
+    }
+
+    ListNode* mergeBinaryLists(vector<ListNode*>& lists,int low,int high){
+        if(low==high){
+            return lists[low];
+        }
+        if(low==high-1){
+            return merge2Lists(lists[low],lists[high]);
+        }
+        else{
+            int mid=(low+high)/2;
+            ListNode* left=mergeBinaryLists(lists,low,mid);
+            ListNode* right=mergeBinaryLists(lists,mid+1,high);
+            return merge2Lists(left,right);
+        }
+
+    }
+
+    ListNode* merge2Lists(ListNode* lists1,ListNode* lists2){
+        ListNode* L=new ListNode();
+        ListNode* p=L;
+        while(lists1!=nullptr&&lists2!=nullptr){
+            if(lists1->val<=lists2->val){
+                p->next=lists1;
+                lists1=lists1->next;
+            }
+            else{
+                p->next=lists2;
+                lists2=lists2->next;
+            }
+            p=p->next;
+        }
+        if(lists1!=nullptr){
+            p->next=lists1;
+        }
+        if(lists2!=nullptr){
+            p->next=lists2;
+        }
+        return L->next;
+    }
+};
