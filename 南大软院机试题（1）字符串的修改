@@ -1,0 +1,77 @@
+（1）法一：递归法，但是看出了动态规划的端倪。
+
+#include<stdlib.h>
+#include<iostream>
+#include<math.h>
+#include<algorithm>
+#include<string>
+using namespace std;
+
+int findMin(string str,int i, string match, int j) {
+    if (i == str.length()) {
+        return match.length() - j;
+    }
+    if (j == match.length()) {
+        return str.length() - i;
+    }
+    if (str[i] == match[j]) {
+        return findMin(str, i + 1, match, j + 1);
+    }
+    else {
+        return min(findMin(str, i, match, j + 1) + 1,
+            min(findMin(str, i + 1, match, j) + 1, findMin(str, i + 1, match, j + 1) + 1));
+    }
+}
+
+int main()
+{
+	/*输入描述:删除一个字符；、插入一个字符；、将一个字符改为另一个字符。 
+    第一行为字符串A；第二行为字符串B；字符串A和B的长度均小于200。
+    输出描述
+    只有一个正整数，为最少字符操作次数。*/
+    string str="sfdxbqw";
+    string match="gfdgw";
+    cout << findMin(str,0,match,0) << endl;
+	return 0;
+}
+
+（2）法二：动态规划法
+ //dp[i][j]表示str的前i个字符组成的串转化为match前j个字符组成的串需要的最少的操作数；
+ //dp[i][j]=if(str[i]==match[j]--->dp[i-1][j-1],否则就是min(dp[i-1][j]+1,dp[i-1][j-1]+1,dp[i][j-1]+1));
+ //边界的状态为dp[0][i]=dp[i][0]=1;
+ 
+int main()
+{
+	/*输入描述:删除一个字符；、插入一个字符；、将一个字符改为另一个字符。 
+    第一行为字符串A；第二行为字符串B；字符串A和B的长度均小于200。
+    输出描述
+    只有一个正整数，为最少字符操作次数。*/
+    string str="sfdxbqw";
+    string match="gfdgw";
+    int m = str.length();
+    int n = match.length();
+    vector<vector<int>> dp(m + 1);
+    for (int i = 0; i <= m; i++) {
+        vector<int> temp(n + 1, 0);
+        dp[i] = temp;
+    }
+    for (int i = 0; i < m; i++) {
+        dp[i][0] = 1;
+    }
+    for (int i = 0; i < n; i++) {
+        dp[0][i] = 1;
+    }
+    dp[0][0] = 0;
+    for (int i = 1; i <= m; i++) {
+        for (int j = 1; j <= n; j++) {
+            if (str[i-1] == match[j-1]) {
+                dp[i][j] = dp[i - 1][j - 1];
+            }
+            else {
+                dp[i][j] = min(dp[i - 1][j], min(dp[i - 1][j - 1], dp[i][j - 1])) + 1;
+            }
+        }
+    }
+    cout << dp[m][n] << endl;
+	  return 0;
+}
