@@ -1,0 +1,32 @@
+//本题重点是什么是字典排序，找字典排序的下一个排序！
+class Solution {
+public:
+    void nextPermutation(vector<int>& nums) {
+        //字典排序，以用字典序法找124653的下一个排列为例：
+        //从（临近的）右-->左找第一个左边值<右边值的，如果找不到，说明已经排好序了。
+        //找到-->记左边值下标i-->在从右向左找第一个大于i的，记录下标j-->交换i和j的值，然后从i+1-->end进行从小到大的排序;
+        int indexi=-1,indexj=-1;
+        for(int i=nums.size()-1;i>0;i--){
+            if(nums[i-1]<nums[i]){
+                indexi=i-1;
+                break;  //你妈的，你忘记加break了！
+            }
+        }
+        if(indexi==-1){
+            sort(nums.begin(),nums.end());
+        }
+        else{
+            int temp;
+            for(int j=nums.size()-1;j>indexi;j--){
+                if(nums[j]>nums[indexi]){
+                    indexj=j;
+                    break;
+                }
+            }
+            temp=nums[indexi];
+            nums[indexi]=nums[indexj];
+            nums[indexj]=temp;
+            sort(nums.begin()+indexi+1,nums.end());
+        }
+    }
+};
