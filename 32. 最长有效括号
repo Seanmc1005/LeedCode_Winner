@@ -1,0 +1,84 @@
+（1）法一：转换思想-->转换成求连续最长的0串。
+
+class Solution {
+public:
+    int longestValidParentheses(string s) {
+        //注意()(())这样是6
+        //转换法，先用栈去模拟一遍，将所有可以正确匹配的全部置为0，不能匹配的全部置为1。注意这里栈里存的是下标！！！
+        //然后转换成了寻找连续0的最大子串长度。
+        int Max=0;
+        stack<int> index;
+        int* a=new int[s.length()];
+        for(int i=0;i<s.length();i++){
+            a[i]=0;
+        }
+        int i=0;
+        while(i<s.length()){
+            if(s[i]=='('){
+                index.push(i);
+            }
+            else{
+                if(index.empty()){
+                    a[i]=1;
+                }
+                else{
+                    index.pop();
+                }
+            }
+            i++;
+        }
+        while(!index.empty()){
+            a[index.top()]=1;
+            index.pop();
+        }
+        //接下来找连续0最串;
+        int sum=0;
+        for(int i=0;i<s.length();i++){
+            if(a[i]==1) {
+                sum=0;
+                continue;
+            }
+            sum++;
+            Max=max(Max,sum);
+        }
+        return Max;
+    }
+};
+
+（2）动态递归法：
+//动态递归还是那句话，理解是源头：到底要解决的问题的结构是什么样子的？
+//要计算dp[i]跟dp[i-1]之间到底是什么关系，他需要通过dp[i-1]知道些什么？
+//dp[i-1]表示到i-1为止的连续有效括号的数目-->那么我们需要看s[i-1-dp[i-1]]处是否是'('与我们s[i]处的')'匹配。
+//如果匹配那就是dp[i]=dp[i-1]+2,注意，还需要再加上dp[i-1-dp[i-1]-1]得值。但是如果s[i]为左括号那就dp[i]=0;
+
+class Solution {
+public:
+    int longestValidParentheses(string s) {
+        //动态递归法dp[i]表示以i结尾的最长有效括号子串。
+        //注意，一般扯到连续的基本上就是到什么什么为止。
+        //必须搞清楚，dp[i]和dp[i-1]之间的关系，注意，不再是简单的那种现行没脑子的关系，需要好好分析有效括号的结构。
+        //一个有效的序列一般是（...）这种的，dp[i]表示的长度。
+        //所以dp[i]=match((i-1)-dp[i-1],s[i])? dp[i-1]+2+dp[i-1-dp[i-1]-1]: 0;
+        //边界值：dp[0]=0;
+        if(s.length()==0){
+            return 0;
+        }
+        int Max=0;
+        int *dp=new int[s.length()];
+        dp[0]=0;
+        for(int i=1;i<s.length();i++){
+            dp[i]=0;
+            if(s[i]==')'){
+                int pre=i-1-dp[i-1];
+                if(pre>=0&&s[pre]=='('){
+                    dp[i]=dp[i-1]+2;
+                    if(pre>0){
+                        dp[i]+=dp[pre-1];
+                    }
+                }
+            }
+            Max=max(Max,dp[i]);
+        }
+        return Max;
+    }
+};
