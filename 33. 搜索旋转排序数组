@@ -1,0 +1,104 @@
+（1）二分法为主，先找旋转点再在相应的区间内二分查找！
+//但是，似乎时间复杂度降下来了，但是测试的时候效率还挺高。。。
+class Solution {
+public:
+    int search(vector<int>& nums, int target) {
+        int index=-1;
+        //log2n是二分搜索。
+        int low=0;
+        if(nums.size()==1){
+            return nums[0]==target? 0:-1;
+        }
+        int high=nums.size()-1;
+        while(low<=high){
+            int mid=(low+high)/2;
+            if(nums[low]>nums[mid]){
+                high=mid;
+            }
+            else if(nums[low]<nums[mid]){
+                low=mid;
+            }
+            else if(nums[low]==nums[mid]){
+                break;
+            }
+        }
+        int one=0,two=0;
+        if(nums[low]<nums[low+1]){
+            two=low;
+        }
+        else if(nums[low]>nums[low+1]){
+            two=low+1;
+        }
+        if(nums[0]<nums[nums.size()-1]){
+            low=0;
+            high=nums.size()-1;
+        }
+        else if(target<=nums[nums.size()-1]){ //后半段
+            low=two;
+            high=nums.size()-1;
+        }
+        else{
+            high=low;
+            low=0;        
+        }
+        while(low<=high){
+            int mid=(low+high)/2;
+            if(target==nums[mid]){
+                index=mid;
+                break;
+            }
+            else if(target>nums[mid]){
+                low=mid+1;
+            }
+            else{
+                high=mid-1;
+            }
+        }
+        return index;
+    }
+};
+
+（2）法二：二分搜索法进阶版
+
+class Solution {
+public:
+    int search(vector<int>& nums, int target) {
+        //仔细分析；
+        int left=0,right=nums.size()-1;
+        int index=-1;
+        while(left<=right){
+            int mid=(left+right)/2;
+            if(nums[mid]==target){
+                index=mid;
+                break;
+            }
+            else if(nums[mid]<nums[right]){  
+    //-->从mid到right是有序的，所以直接判断target在不在里面即可。
+                if(nums[mid]<target&&target<=nums[right]){
+                    left=mid+1;
+                }else{
+                    right=mid-1;
+                }
+            }
+            else{  
+    //nums[mid]>=nums[right]->从low-->mid是有序的。判断target是否在low-->mid之间即可。
+                if(nums[left]<=target&&target<nums[mid]){
+                    right=mid-1;
+                }else{
+                    left=mid+1;
+                }
+            }
+        }
+        return index;
+    }
+};
+
+（3）法三：直接遍历即可，O（n）
+
+/*for(int i=0;i<nums.size();i++){  O(n)的弱智解法。
+            if(nums[i]==target){
+                index=i;
+                break;
+            }
+        }
+*/
