@@ -1,0 +1,42 @@
+class Solution {
+public:
+    vector<vector<int>> permute(vector<int>& nums) {
+        //回溯法
+        vector<vector<int>> result;
+        int n=nums.size();
+        vector<int> temp;
+        vector<int> index(n);
+        for(int i=0;i<n;i++){
+            index[i]=-1;
+        }
+        int i=0;
+        while(i>=0){
+            index[i]++;
+            while(index[i]<n&&find(temp.begin(),temp.end(),nums[index[i]])!=temp.end()){
+                index[i]++;
+            }
+            if(index[i]<n){
+                temp.push_back(nums[index[i]]);
+                if(i==n-1){
+                    vector<int> ans(temp);
+                    result.push_back(ans);
+                    if(temp.size()>=2){
+                        temp.pop_back();
+                        temp.pop_back();
+                    }
+                    index[i]=-1;
+                    i--;
+                }
+                else{
+                    i++;
+                }
+            }else{
+                if(temp.size()>0)
+                    temp.pop_back();
+                    index[i]=-1;
+                    i--;
+            }
+        }
+        return result;
+    }
+};
