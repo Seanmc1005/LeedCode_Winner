@@ -1,0 +1,31 @@
+//每个位置可以存储水的量=min(左侧最高的高度，右侧最高的高度)-当前的柱子高度，大于0的值表示存水量，且第一个柱子和最后一个柱子不存水。
+class Solution {
+public:
+    int trap(vector<int>& height) {
+        //还是要看图理解！！！
+        //height[i]可以存储的水量=
+        //min(maxLeft[i],maxRight[i])-height[i]>0就要！
+        if(height.size()==0) return 0;
+        int count=0;
+        int* maxLeft=new int[height.size()];
+        int* maxRight=new int[height.size()];
+        int maxLeftNum, maxRightNum; 
+        maxLeftNum=height[0];
+        maxRightNum=height[height.size()-1];
+        for(int i=0;i<height.size();i++){
+            maxLeft[i]=maxLeftNum;
+            maxLeftNum=height[i]>maxLeftNum? height[i]:maxLeftNum;
+        }
+        for(int i=height.size()-1;i>=0;i--){
+            maxRight[i]=maxRightNum;
+            maxRightNum=height[i]>maxRightNum? height[i]:maxRightNum;
+        }
+        for(int i=1;i<height.size()-1;i++){
+            int temp=min(maxLeft[i],maxRight[i])-height[i];
+            if(temp>0){
+                count+=temp;
+            }
+        }
+        return count;
+    } 
+};
