@@ -1,0 +1,41 @@
+//回溯法，先画出来树-->然后找需要传的参数-->返回值什么？-->回溯点在哪里？-->回溯之后需要恢复的值是哪些？-->最后是剪枝技术怎么运用？
+class Solution {
+private:
+    vector<vector<int>> result;
+    vector<int> path;
+public:
+    vector<vector<int>> combinationSum(vector<int>& candidates, int target) {
+        sort(candidates.begin(),candidates.end());
+        //从0-->indexEnd的位置进行找寻答案;
+        //与之前做的回溯不同的点在于：我不确定循环数也就是不确定找几次，它结束的点在于sum(vector)=target;值得思考！！！
+        //为了防止重复，后面的只能从前面以及其后面往后选数。
+        //回溯法怎么解决？？？
+        searchAllPath(candidates,target,path,0);
+        return result;
+    }
+    void searchAllPath(vector<int> candidates,int target,vector<int> path,int startIndex){
+        if(target==0){
+            result.push_back(path);
+            return ;
+        }
+        for(int i=startIndex;i<candidates.size();i++){
+            if(target<candidates[i]){  //剪枝
+                return;
+            }
+            else{
+                path.push_back(candidates[i]);
+                target-=candidates[i];
+                searchAllPath(candidates,target,path,i);
+                target+=candidates[i];
+                path.pop_back();
+            }
+        }
+    }
+};
+
+
+
+
+
+
+
