@@ -1,0 +1,36 @@
+//  二分查找，YYDS！重点是排好序了，那就直接二分查找即可+找到一个之后从该点向两边走即可。
+class Solution {
+public:
+    vector<int> searchRange(vector<int>& nums, int target) {
+        //重点是排好序了，那就直接二分查找即可+找到一个之后从该点向两边走即可。
+        int indexStart=-1,indexEnd=-1;
+        int index=-1,low=0,high=nums.size()-1;
+        while(low<=high){
+            int mid=(low+high)/2;
+            if(nums[mid]==target){
+                index=mid;
+                break;
+            }
+            else if(nums[mid]>target){
+                high=mid-1;
+            }
+            else{
+                low=mid+1;
+            }
+        }
+        if(index!=-1){
+            indexStart=index;
+            indexEnd=index;
+            while(indexStart-1>=0&&nums[indexStart-1]==target){
+                indexStart--;
+            }
+            while(indexEnd+1<nums.size()&&nums[indexEnd+1]==target){
+                indexEnd++;
+            }
+        }
+        vector<int> result;
+        result.push_back(indexStart);
+        result.push_back(indexEnd);
+        return result;
+    }
+};
