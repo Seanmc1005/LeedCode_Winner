@@ -1,0 +1,27 @@
+class Solution {
+public:
+    void sortColors(vector<int>& nums) {
+        //sort(nums.begin(),nums.end());
+        int n=nums.size();
+        int indexi=0,indexj=n-1;
+        int temp;
+        for(int i=0;i<n&&i<=indexj;){
+            if(nums[i]==0){  //说明indexi的位置跟i处交换的只能是1，如果是2的话，之前遍历的时候就已经移到后面了。
+                temp=nums[i];
+                nums[i]=nums[indexi];
+                nums[indexi]=temp;
+                indexi++;
+                i++;
+            }
+            else if(nums[i]==2){  //移动到i处的可能是0/1
+                temp=nums[i];
+                nums[i]=nums[indexj];
+                nums[indexj]=temp;
+                indexj--;
+            }
+            else if(nums[i]==1){
+                i++;
+            }
+        }    
+    }
+};
