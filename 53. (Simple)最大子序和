@@ -1,0 +1,20 @@
+class Solution {
+public:
+    int maxSubArray(vector<int>& nums) {
+        //动态规划
+        //dp[i]表示到i为止连续最大子数组和
+        //dp[i]=max(dp[i-1]>0+nums[i],nums[i]);
+        int Max;
+        //int* dp=new int[nums.size()];
+        //dp[0]=nums[0];
+        int a0,a1;
+        a0=nums[0];
+        Max=a0;
+        for(int i=1;i<nums.size();i++){
+            a1=a0>0? a0+nums[i]:nums[i];
+            a0=a1;
+            Max=max(Max,a0);
+        }
+        return Max;
+    }
+};
